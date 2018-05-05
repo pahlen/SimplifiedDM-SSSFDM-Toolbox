@@ -33,17 +33,11 @@ ParticleDefinitions[GaugeES] = {
   ParticleDefinitions[EWSB] = {
             
       
-    {hh   ,  {  Description -> "Higgs",
-                PDG -> {25},
-		PDG.IX -> {101000001},
-                Mass -> LesHouches,
-                FeynArtsNr -> 1,
-                LaTeX -> "h",
-                ElectricCharge -> 0,
-                LHPC -> {1},
-		OutputName -> "h"  }}, 
+     {hh   ,  {  Description -> "Higgs",
+                 PDG -> {25},
+                 PDG.IX -> {101000001} }},
 
-    {ss   , {  Description -> "Singlet",
+     {ss   , {  Description -> "Singlet",
 	       PDG -> {6666635},
 	       PDG.IX -> {101000002},
                FeynArtsNr -> 10,
@@ -55,15 +49,11 @@ ParticleDefinitions[GaugeES] = {
 
                  
      {Ah   ,  {  Description -> "Pseudo-Scalar Higgs",
-                 FeynArtsNr -> 2,
                  PDG -> {0},
                  PDG.IX ->{0},
                  Mass -> {0},
                  Width -> {0} }},                       
-      
-      
      {Hp,     { Description -> "Charged Higgs", 
-                 FeynArtsNr -> 3,
                  PDG -> {0},
                  PDG.IX ->{0},
                  Width -> {0}, 
@@ -73,25 +63,39 @@ ParticleDefinitions[GaugeES] = {
                  }},                                                   
       
       {VP,   { Description -> "Photon"}}, 
-      {VZ,   { Description -> "Z-Boson",
-      			 Goldstone -> Ah }}, 
+      {VZ,   { Description -> "Z-Boson", Goldstone -> Ah }}, 
       {VG,   { Description -> "Gluon" }},          
-      {VWp,  { Description -> "W+ - Boson",
-      			Goldstone -> Hp }},         
+      {VWp,  { Description -> "W+ - Boson", Goldstone -> Hp }},         
+ 
       {gP,   { Description -> "Photon Ghost"}},                                                   
       {gWp,  { Description -> "Positive W+ - Boson Ghost"}}, 
       {gWpC, { Description -> "Negative W+ - Boson Ghost" }}, 
       {gZ,   { Description -> "Z-Boson Ghost" }},
       {gG,   { Description -> "Gluon Ghost" }},          
-                               
                  
       {Fd,   { Description -> "Down-Quarks"}},   
       {Fu,   { Description -> "Up-Quarks"}},   
       {Fe,   { Description -> "Leptons" }},
-      {Fre,  {PDG -> {210000601},PDG.IX -> {-111100601},Mass -> {LesHouches},Width -> {External},LaTeX -> "R_e",           ElectricCharge -> -1,OutputName -> "Re"}},
-      {Fv,   { Description -> "Neutrinos" }}                                                              
-     
-        };    
+      {Fv,   { Description -> "Neutrinos" }} ,
+    
+    
+      (* New Fermion Sector *)
+      
+       {Ft0,  { PDG -> {6000059},
+              Width -> External,
+	      Mass -> LesHouches,
+              ElectricCharge -> 0,
+              LaTeX -> "Ft0",
+	      OutputName -> "Ft0" }},
+
+      {Fre,  { PDG -> {6000061},
+              Width -> External,
+	      Mass -> LesHouches,
+	      ElectricCharge -> -1,
+              LaTeX -> "\psi",
+	      OutputName -> "Fre" }}
+      
+      };    
         
         
         
@@ -101,14 +105,14 @@ ParticleDefinitions[GaugeES] = {
                  Width -> 0, 
                  Mass -> Automatic,
                  LaTeX -> "H",
-                 OutputName -> "" }},
+                 OutputName -> "H" }},
+
 
     {S,      {   PDG -> {0},
                  Width -> 0, 
                  Mass -> Automatic,
                  LaTeX -> "S",
                  OutputName -> "" }},
-
    {dR,     {LaTeX -> "d_R" }},
    {eR,     {LaTeX -> "e_R" }},
    {lep,     {LaTeX -> "l" }},
@@ -118,14 +122,20 @@ ParticleDefinitions[GaugeES] = {
    {dL,     {LaTeX -> "d_L" }},
    {uL,     {LaTeX -> "u_L" }},
    {vL,     {LaTeX -> "\\nu_L" }},
-   {eu,{LaTeX -> "\\Psi_L"}},
-   {ed,{LaTeX -> "\\Psi_R"}},
+
    {DR,     {LaTeX -> "D_R" }},
    {ER,     {LaTeX -> "E_R" }},
    {UR,     {LaTeX -> "U_R" }},
    {EL,     {LaTeX -> "E_L" }},
    {DL,     {LaTeX -> "D_L" }},
-   {UL,     {LaTeX -> "U_L" }}
-        };       
+   {UL,     {LaTeX -> "U_L" }},
+   {VL,     {LaTeX -> "V_L" }},
+   
+   {T,     {LaTeX -> "T^F" }},
+   {t0,     {LaTeX -> "T^0" }},
+   {ed,     {LaTeX -> "e_d^+" }},
+   {eu,     {LaTeX -> "e_u^-" }}
+ 
+    };       
 
 

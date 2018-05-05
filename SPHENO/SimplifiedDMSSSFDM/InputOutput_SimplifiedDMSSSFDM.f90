@@ -3,7 +3,7 @@
 ! SARAH References: arXiv:0806.0538, 0909.2863, 1002.0840, 1207.0906, 1309.7223  
 ! (c) Florian Staub, 2013  
 ! ------------------------------------------------------------------------------  
-! File created at 21:04 on 20.10.2016   
+! File created at 16:55 on 30.1.2017   
 ! ----------------------------------------------------------------------  
  
  
@@ -195,12 +195,6 @@ InputValueforYe= .True.
    Else If (read_line(7:12).Eq."IMSMIN") Then 
     Call Read_SMIN(99,1,i_model,set_mod_par,kont) 
  
-   Else If (read_line(7:11).Eq."FDMIN") Then 
-    Call Read_FDMIN(99,0,i_model,set_mod_par,kont) 
- 
-   Else If (read_line(7:13).Eq."IMFDMIN") Then 
-    Call Read_FDMIN(99,1,i_model,set_mod_par,kont) 
- 
    Else If (read_line(7:13).Eq."MSOFTIN") Then 
     Call Read_MSOFTIN(99,0,i_model,set_mod_par,kont) 
  
@@ -251,11 +245,11 @@ Else If (i_par.Eq.3) Then
 If (i_c.Eq.0) LamSIN= Cmplx(wert,Aimag(LamSIN),dp) 
 If (i_c.Eq.1) LamSIN= Cmplx(Real(LamSIN,dp),wert,dp) 
 Else If (i_par.Eq.4) Then 
-If (i_c.Eq.0) MSinput= Cmplx(wert,Aimag(MSinput),dp) 
-If (i_c.Eq.1) MSinput= Cmplx(Real(MSinput,dp),wert,dp) 
+If (i_c.Eq.0) MS2Input= Cmplx(wert,Aimag(MS2Input),dp) 
+If (i_c.Eq.1) MS2Input= Cmplx(Real(MS2Input,dp),wert,dp) 
 Else If (i_par.Eq.5) Then 
-If (i_c.Eq.0) MDFinput= Cmplx(wert,Aimag(MDFinput),dp) 
-If (i_c.Eq.1) MDFinput= Cmplx(Real(MDFinput,dp),wert,dp) 
+If (i_c.Eq.0) MSFIN= Cmplx(wert,Aimag(MSFIN),dp) 
+If (i_c.Eq.1) MSFIN= Cmplx(Real(MSFIN,dp),wert,dp) 
 Else
 Write(ErrCan,*) "Error in routine "//NameOfUnit(Iname)
 If (i_c.Eq.0) Write(ErrCan,*) "Unknown entry for Block MINPAR ",i_par
@@ -1061,48 +1055,6 @@ End Subroutine Read_EXTPAR
       End If
  
 
-Case(1101) 
-   If (wert.ne.1) Include_in_loopFv= .False. 
-Case(1102) 
-   If (wert.ne.1) Include_in_loopFre= .False. 
-Case(1103) 
-   If (wert.ne.1) Include_in_loopFd= .False. 
-Case(1104) 
-   If (wert.ne.1) Include_in_loopFu= .False. 
-Case(1105) 
-   If (wert.ne.1) Include_in_loopFe= .False. 
-Case(1201) 
-   If (wert.ne.1) Include_in_loopHp= .False. 
-Case(1202) 
-   If (wert.ne.1) Include_in_loopss= .False. 
-Case(1203) 
-   If (wert.ne.1) Include_in_loopAh= .False. 
-Case(1204) 
-   If (wert.ne.1) Include_in_loophh= .False. 
-Case(1301) 
-   If (wert.ne.1) Include_in_loopVG= .False. 
-Case(1302) 
-   If (wert.ne.1) Include_in_loopVP= .False. 
-Case(1303) 
-   If (wert.ne.1) Include_in_loopVZ= .False. 
-Case(1304) 
-   If (wert.ne.1) Include_in_loopVWp= .False. 
-Case(1401) 
-   If (wert.ne.1) Include_in_loopgG= .False. 
-Case(1402) 
-   If (wert.ne.1) Include_in_loopgA= .False. 
-Case(1403) 
-   If (wert.ne.1) Include_in_loopgZ= .False. 
-Case(1404) 
-   If (wert.ne.1) Include_in_loopgWp= .False. 
-Case(1405) 
-   If (wert.ne.1) Include_in_loopgWC= .False. 
-Case(1500) 
-   If (wert.ne.1) IncludeWave = .False. 
-Case(1501) 
-   If (wert.ne.1) IncludePenguins = .False. 
-Case(1502) 
-   If (wert.ne.1) IncludeBoxes = .False. 
     Case Default
       If (output_screen) Write(*,*) &
            & "Problem while reading SPhenoInput, ignoring unknown entry" &
@@ -1164,7 +1116,7 @@ Real(dp) :: Q, MassLSP(2), facPP, facGG, facPZ
 Integer :: CurrentPDG2(2), CurrentPDG3(3), PDGlsp(2) 
 Integer::ierr,i_errors(1100),gt1,gt2,gt3,icount
 Complex(dp) :: PDGhh,PDGss,PDGAh,PDGHp,PDGVP,PDGVZ,PDGVG,PDGVWp,PDGgP,PDGgWp,PDGgWpC,PDGgZ,          & 
-& PDGgG,PDGFd(3),PDGFu(3),PDGFe(3),PDGFre,PDGFv(3)
+& PDGgG,PDGFd(3),PDGFu(3),PDGFe(3),PDGFv(3),PDGFre
 
 Character(len=30) :: NameParticlehh
 Character(len=30) :: NameParticless
@@ -1182,8 +1134,8 @@ Character(len=30) :: NameParticlegG
 Character(len=30),Dimension(3):: NameParticleFd
 Character(len=30),Dimension(3):: NameParticleFu
 Character(len=30),Dimension(3):: NameParticleFe
-Character(len=30) :: NameParticleFre
 Character(len=30),Dimension(3):: NameParticleFv
+Character(len=30) :: NameParticleFre
 Complex(dp) :: Zbottom(2,2), Ztop(2,2), Ztau(2,2) 
 
  
@@ -1234,14 +1186,14 @@ PDGFe(2)=13
 NameParticleFe(2)="Fe_2"
 PDGFe(3)=15
 NameParticleFe(3)="Fe_3"
-PDGFre=210000601
-NameParticleFre="Fre"
 PDGFv(1)=12
 NameParticleFv(1)="Fv_1"
 PDGFv(2)=14
 NameParticleFv(2)="Fv_2"
 PDGFv(3)=16
 NameParticleFv(3)="Fv_3"
+PDGFre=6000061
+NameParticleFre="Fre"
 
  
  
@@ -1299,14 +1251,14 @@ Write(io_L,100) "Block MINPAR  # Input parameters"
 Write(io_L,101) 1, Real(Lambda1IN,dp) ,"# Lambda1IN"
 Write(io_L,101) 2, Real(LamSHIN,dp) ,"# LamSHIN"
 Write(io_L,101) 3, Real(LamSIN,dp) ,"# LamSIN"
-Write(io_L,101) 4, Real(MSinput,dp) ,"# MSinput"
-Write(io_L,101) 5, Real(MDFinput,dp) ,"# MDFinput"
+Write(io_L,101) 4, Real(MS2Input,dp) ,"# MS2Input"
+Write(io_L,101) 5, Real(MSFIN,dp) ,"# MSFIN"
 WriteNextBlock = .False. 
 If (Abs(Aimag(Lambda1IN)).gt.0._dp) WriteNextBlock = .True. 
 If (Abs(Aimag(LamSHIN)).gt.0._dp) WriteNextBlock = .True. 
 If (Abs(Aimag(LamSIN)).gt.0._dp) WriteNextBlock = .True. 
-If (Abs(Aimag(MSinput)).gt.0._dp) WriteNextBlock = .True. 
-If (Abs(Aimag(MDFinput)).gt.0._dp) WriteNextBlock = .True. 
+If (Abs(Aimag(MS2Input)).gt.0._dp) WriteNextBlock = .True. 
+If (Abs(Aimag(MSFIN)).gt.0._dp) WriteNextBlock = .True. 
 If(WriteNextBlock) Then 
 Write(io_L,100) "Block IMMINPAR  # Input parameters"
 If (Abs(Aimag(Lambda1IN)).gt.0._dp) Then 
@@ -1318,11 +1270,11 @@ End if
 If (Abs(Aimag(LamSIN)).gt.0._dp) Then 
 Write(io_L,101) 3, Aimag(LamSIN) ,"# LamSIN"
 End if 
-If (Abs(Aimag(MSinput)).gt.0._dp) Then 
-Write(io_L,101) 4, Aimag(MSinput) ,"# MSinput"
+If (Abs(Aimag(MS2Input)).gt.0._dp) Then 
+Write(io_L,101) 4, Aimag(MS2Input) ,"# MS2Input"
 End if 
-If (Abs(Aimag(MDFinput)).gt.0._dp) Then 
-Write(io_L,101) 5, Aimag(MDFinput) ,"# MDFinput"
+If (Abs(Aimag(MSFIN)).gt.0._dp) Then 
+Write(io_L,101) 5, Aimag(MSFIN) ,"# MSFIN"
 End if 
 End if 
 Write(io_L,106) "Block gaugeGUT Q=",m_GUT,"# (GUT scale)" 
@@ -1351,27 +1303,24 @@ Write(io_L,104) 3,Real(LS,dp), "# LS"
 If (Abs(Aimag(LS)).gt.0._dp) WriteNextBlock = .True. 
 Write(io_L,104) 2,Real(LSH,dp), "# LSH" 
 If (Abs(Aimag(LSH)).gt.0._dp) WriteNextBlock = .True. 
+Write(io_L,104) 1,Real(MFS,dp), "# MFS" 
+If (Abs(Aimag(MFS)).gt.0._dp) WriteNextBlock = .True. 
 If(WriteNextBlock) Then 
 Write(io_L,106) "Block IMHDM Q=",Q,"# (Renormalization Scale)" 
 Write(io_L,104) 3,Aimag(LS), "# LS" 
 Write(io_L,104) 2,Aimag(LSH), "# LSH" 
+Write(io_L,104) 1,Aimag(MFS), "# MFS" 
 End if 
 WriteNextBlock = .false. 
 Write(io_L,106) "Block SM Q=",Q,"# (Renormalization Scale)" 
 Write(io_L,104) 2,Real(Lam,dp), "# Lam" 
 If (Abs(Aimag(Lam)).gt.0._dp) WriteNextBlock = .True. 
-Write(io_L,104) 1,Real(mu2,dp), "# mu2" 
-If (Abs(Aimag(mu2)).gt.0._dp) WriteNextBlock = .True. 
+Write(io_L,104) 1,Real(Mu,dp), "# Mu" 
+If (Abs(Aimag(Mu)).gt.0._dp) WriteNextBlock = .True. 
 If(WriteNextBlock) Then 
 Write(io_L,106) "Block IMSM Q=",Q,"# (Renormalization Scale)" 
 Write(io_L,104) 2,Aimag(Lam), "# Lam" 
-Write(io_L,104) 1,Aimag(mu2), "# mu2" 
-End if 
-WriteNextBlock = .false. 
-Write(io_L,106) "Block FDM Q=",Q,"# (Renormalization Scale)" 
-Write(io_L,104) 1,Real(MDF,dp), "# MDF" 
-If(WriteNextBlock) Then 
-Write(io_L,106) "Block IMFDM Q=",Q,"# (Renormalization Scale)" 
+Write(io_L,104) 1,Aimag(Mu), "# Mu" 
 End if 
 WriteNextBlock = .false. 
 Write(io_L,106) "Block MSOFT Q=",Q,"# (Renormalization Scale)" 
@@ -1389,36 +1338,36 @@ If (WriteTreeLevelTadpoleParameters) Then
 If (HighScaleModel.Eq."LOW") Then 
 WriteNextBlock = .false. 
 Write(io_L,106) "Block TREESM Q=",Q,"# (Renormalization Scale)" 
-Write(io_L,104) 1,Real(mu2Tree,dp), "# mu2" 
-If (Abs(Aimag(mu2Tree)).gt.0._dp) WriteNextBlock = .True. 
+Write(io_L,104) 1,Real(MuTree,dp), "# Mu" 
+If (Abs(Aimag(MuTree)).gt.0._dp) WriteNextBlock = .True. 
 If(WriteNextBlock) Then 
 Write(io_L,106) "Block TREEIMSM Q=",Q,"# (Renormalization Scale)" 
-Write(io_L,104) 1,Aimag(mu2Tree), "# mu2" 
+Write(io_L,104) 1,Aimag(MuTree), "# Mu" 
 End if 
 WriteNextBlock = .false. 
 Write(io_L,106) "Block LOOPSM Q=",Q,"# (Renormalization Scale)" 
-Write(io_L,104) 1,Real(mu21L,dp), "# mu2" 
-If (Abs(Aimag(mu21L)).gt.0._dp) WriteNextBlock = .True. 
+Write(io_L,104) 1,Real(Mu1L,dp), "# Mu" 
+If (Abs(Aimag(Mu1L)).gt.0._dp) WriteNextBlock = .True. 
 If(WriteNextBlock) Then 
 Write(io_L,106) "Block LOOPIMSM Q=",Q,"# (Renormalization Scale)" 
-Write(io_L,104) 1,Aimag(mu21L), "# mu2" 
+Write(io_L,104) 1,Aimag(Mu1L), "# Mu" 
 End if 
 Else 
 WriteNextBlock = .false. 
 Write(io_L,106) "Block TREESM Q=",Q,"# (Renormalization Scale)" 
-Write(io_L,104) 1,Real(mu2Tree,dp), "# mu2" 
-If (Abs(Aimag(mu2Tree)).gt.0._dp) WriteNextBlock = .True. 
+Write(io_L,104) 1,Real(MuTree,dp), "# Mu" 
+If (Abs(Aimag(MuTree)).gt.0._dp) WriteNextBlock = .True. 
 If(WriteNextBlock) Then 
 Write(io_L,106) "Block TREEIMSM Q=",Q,"# (Renormalization Scale)" 
-Write(io_L,104) 1,Aimag(mu2Tree), "# mu2" 
+Write(io_L,104) 1,Aimag(MuTree), "# Mu" 
 End if 
 WriteNextBlock = .false. 
 Write(io_L,106) "Block LOOPSM Q=",Q,"# (Renormalization Scale)" 
-Write(io_L,104) 1,Real(mu21L,dp), "# mu2" 
-If (Abs(Aimag(mu21L)).gt.0._dp) WriteNextBlock = .True. 
+Write(io_L,104) 1,Real(Mu1L,dp), "# Mu" 
+If (Abs(Aimag(Mu1L)).gt.0._dp) WriteNextBlock = .True. 
 If(WriteNextBlock) Then 
 Write(io_L,106) "Block LOOPIMSM Q=",Q,"# (Renormalization Scale)" 
-Write(io_L,104) 1,Aimag(mu21L), "# mu2" 
+Write(io_L,104) 1,Aimag(Mu1L), "# Mu" 
 End if 
 End if 
 End if 
@@ -1503,11 +1452,10 @@ Write(io_L,104) 3,Real(g3GUT,dp), "# g3"
 Write(io_L,106) "Block HDMGUT Q=",M_GUT,"# (GUT scale)" 
 Write(io_L,104) 3,Real(LSGUT,dp), "# LS" 
 Write(io_L,104) 2,Real(LSHGUT,dp), "# LSH" 
+Write(io_L,104) 1,Real(MFSGUT,dp), "# MFS" 
 Write(io_L,106) "Block SMGUT Q=",M_GUT,"# (GUT scale)" 
 Write(io_L,104) 2,Real(LamGUT,dp), "# Lam" 
-Write(io_L,104) 1,Real(mu2GUT,dp), "# mu2" 
-Write(io_L,106) "Block FDMGUT Q=",M_GUT,"# (GUT scale)" 
-Write(io_L,104) 1,Real(MDFGUT,dp), "# MDF" 
+Write(io_L,104) 1,Real(MuGUT,dp), "# Mu" 
 Write(io_L,106) "Block MSOFTGUT Q=",M_GUT,"# (GUT scale)" 
 Write(io_L,104) 22,Real(MS2GUT,dp), "# MS2" 
 Write(io_L,106) "Block YuGUT Q=",M_GUT,"# (GUT Scale)" 
@@ -1612,20 +1560,46 @@ End if
  Write(io_L,102) INT(Abs(PDGFe(1))),MFe(1),"# "//Trim(NameParticleFe(1))// "" 
  Write(io_L,102) INT(Abs(PDGFe(2))),MFe(2),"# "//Trim(NameParticleFe(2))// "" 
  Write(io_L,102) INT(Abs(PDGFe(3))),MFe(3),"# "//Trim(NameParticleFe(3))// "" 
- Write(io_L,102) 210000601,MFre,"# Fre" 
+ Write(io_L,102) INT(Abs(PDGFv(1))),MFv(1),"# "//Trim(NameParticleFv(1))// "" 
+ Write(io_L,102) INT(Abs(PDGFv(2))),MFv(2),"# "//Trim(NameParticleFv(2))// "" 
+ Write(io_L,102) INT(Abs(PDGFv(3))),MFv(3),"# "//Trim(NameParticleFv(3))// "" 
+ Write(io_L,102) 6000061,MFre,"# Fre" 
 If (MassLSP(1).gt.Abs(MFre)) Then 
 PDGLSP(2) = PDGLSP(1) 
-PDGLSP(1) = 210000601 
+PDGLSP(1) = 6000061 
 MassLSP(2) = MassLSP(1) 
 MassLSP(1) = Abs(MFre)
 Else 
 If (MassLSP(2).gt.Abs(MFre)) Then 
-PDGLSP(2) = 210000601 
+PDGLSP(2) = 6000061 
 MassLSP(2) = Abs(MFre)
 End if 
 End if 
 
  
+Write(io_L,106) "Block UVMIX Q=",Q,"# ()" 
+Write(io_L,107)1,1,Real(UV(1,1),dp), "# Real(UV(1,1),dp)" 
+Write(io_L,107)1,2,Real(UV(1,2),dp), "# Real(UV(1,2),dp)" 
+Write(io_L,107)1,3,Real(UV(1,3),dp), "# Real(UV(1,3),dp)" 
+Write(io_L,107)2,1,Real(UV(2,1),dp), "# Real(UV(2,1),dp)" 
+Write(io_L,107)2,2,Real(UV(2,2),dp), "# Real(UV(2,2),dp)" 
+Write(io_L,107)2,3,Real(UV(2,3),dp), "# Real(UV(2,3),dp)" 
+Write(io_L,107)3,1,Real(UV(3,1),dp), "# Real(UV(3,1),dp)" 
+Write(io_L,107)3,2,Real(UV(3,2),dp), "# Real(UV(3,2),dp)" 
+Write(io_L,107)3,3,Real(UV(3,3),dp), "# Real(UV(3,3),dp)" 
+If (MaxVal(Abs(AImag(UV))).gt.0._dp) Then 
+Write(io_L,106) "Block IMUVMIX Q=",Q,"# ()" 
+Write(io_L,107)1,1,Aimag(UV(1,1)), "# Aimag(UV(1,1))" 
+Write(io_L,107)1,2,Aimag(UV(1,2)), "# Aimag(UV(1,2))" 
+Write(io_L,107)1,3,Aimag(UV(1,3)), "# Aimag(UV(1,3))" 
+Write(io_L,107)2,1,Aimag(UV(2,1)), "# Aimag(UV(2,1))" 
+Write(io_L,107)2,2,Aimag(UV(2,2)), "# Aimag(UV(2,2))" 
+Write(io_L,107)2,3,Aimag(UV(2,3)), "# Aimag(UV(2,3))" 
+Write(io_L,107)3,1,Aimag(UV(3,1)), "# Aimag(UV(3,1))" 
+Write(io_L,107)3,2,Aimag(UV(3,2)), "# Aimag(UV(3,2))" 
+Write(io_L,107)3,3,Aimag(UV(3,3)), "# Aimag(UV(3,3))" 
+End If 
+
 Write(io_L,106) "Block UDLMIX Q=",Q,"# ()" 
 Write(io_L,107)1,1,Real(ZDL(1,1),dp), "# Real(ZDL(1,1),dp)" 
 Write(io_L,107)1,2,Real(ZDL(1,2),dp), "# Real(ZDL(1,2),dp)" 
@@ -3507,33 +3481,6 @@ End if
 
  
  !-------------------------------
-!Fre
-!-------------------------------
- 
-If(gTFre.gt.MinWidth) Then 
-Write(io_L,200) INT(PDGFre),gTFre,Trim(NameParticleFre) 
-Write(io_L,100) "#    BR                NDA      ID1      ID2" 
-icount = 1 
-Do gt1= 1, 3
-If (BRFre(1,icount).Gt.BrMin) Then 
-CurrentPDG2(1) = PDGFe(gt1) 
-CurrentPDG2(2) = PDGss 
-Write(io_L,201) BRFre(1,icount),2,CurrentPDG2, & 
- & Trim(NameParticleFre)//" -> "//Trim(NameParticleFe(gt1))//" "//Trim(NameParticless)//" "//")"
-End if 
-icount = icount +1 
-  End Do 
-If (BRFre(1,icount).Gt.BrMin) Then 
-CurrentPDG2(1) = PDGFre 
-CurrentPDG2(2) = PDGVZ 
-Write(io_L,201) BRFre(1,icount),2,CurrentPDG2, & 
- & Trim(NameParticleFre)//" -> "//Trim(NameParticleFre)//" "//Trim(NameParticleVZ)//" "//")"
-End if 
-icount = icount +1 
-End if 
-
- 
- !-------------------------------
 !hh
 !-------------------------------
  
@@ -3637,6 +3584,36 @@ Write(io_L,201) BRhh(1,icount),2,CurrentPDG2, &
  & Trim(NameParticlehh)//" -> "//Trim(NameParticleVZ)//" "//Trim(NameParticleVZ)//" "//")"
 End if 
 icount = icount +1 
+End if 
+
+ 
+ !-------------------------------
+!Fre
+!-------------------------------
+ 
+If(gTFre.gt.MinWidth) Then 
+Write(io_L,200) INT(PDGFre),gTFre,Trim(NameParticleFre) 
+Write(io_L,100) "#    BR                NDA      ID1      ID2" 
+icount = 1 
+Do gt1= 1, 3
+If (BRFre(1,icount).Gt.BrMin) Then 
+CurrentPDG2(1) = PDGFe(gt1) 
+CurrentPDG2(2) = PDGss 
+Write(io_L,201) BRFre(1,icount),2,CurrentPDG2, & 
+ & Trim(NameParticleFre)//" -> "//Trim(NameParticleFe(gt1))//" "//Trim(NameParticless)//" "//")"
+End if 
+icount = icount +1 
+  End Do 
+If (BRFre(1,icount).Gt.BrMin) Then 
+CurrentPDG2(1) = PDGFre 
+CurrentPDG2(2) = PDGVZ 
+Write(io_L,201) BRFre(1,icount),2,CurrentPDG2, & 
+ & Trim(NameParticleFre)//" -> "//Trim(NameParticleFre)//" "//Trim(NameParticleVZ)//" "//")"
+End if 
+icount = icount +1 
+If (Maxval(BRFre(1,5:4)).Gt.BRmin) Then 
+Write(io_L,100) "#    BR                NDA      ID1      ID2       ID3" 
+End If 
 End if 
 
  
@@ -3751,7 +3728,7 @@ Write(123,*) "Mu3= ", Abs(MFu(3))
 Write(123,*) "Me1= ", Abs(MFe(1)) 
 Write(123,*) "Me2= ", Abs(MFe(2)) 
 Write(123,*) "Me3= ", Abs(MFe(3)) 
-Write(123,*) "MRe= ", Abs(MFre) 
+Write(123,*) "MFre= ", Abs(MFre) 
 Write(123,*) "" 
 Write(123,*) "" 
 
@@ -3761,8 +3738,8 @@ Write(123,*) ""
  
 Write(123,*) "" 
 Write(123,*) "Wu3 = ",gTFu(3)
-Write(123,*) "WRe = ",gTFre
 Write(123,*) "Wh = ",gThh
+Write(123,*) "WFre = ",gTFre
 Write(123,*) "" 
 Write(123,*) "" 
 
@@ -3771,6 +3748,51 @@ Write(123,*) ""
  Write(123,*) "# Mixing matrices" 
  
 Write(123,*) "" 
+If (MFv(1).Gt.0._dp) Then 
+Write(123,*) "UV11_r = ", Real(UV(1,1),dp)
+Write(123,*) "UV11_i = ", AImag(UV(1,1))
+Write(123,*) "UV12_r = ", Real(UV(1,2),dp)
+Write(123,*) "UV12_i = ", AImag(UV(1,2))
+Write(123,*) "UV13_r = ", Real(UV(1,3),dp)
+Write(123,*) "UV13_i = ", AImag(UV(1,3))
+Else 
+Write(123,*) "UV11_i = ", Real(UV(1,1),dp)
+Write(123,*) "UV11_r = ", -AImag(UV(1,1))
+Write(123,*) "UV12_i = ", Real(UV(1,2),dp)
+Write(123,*) "UV12_r = ", -AImag(UV(1,2))
+Write(123,*) "UV13_i = ", Real(UV(1,3),dp)
+Write(123,*) "UV13_r = ", -AImag(UV(1,3))
+End if 
+If (MFv(2).Gt.0._dp) Then 
+Write(123,*) "UV21_r = ", Real(UV(2,1),dp)
+Write(123,*) "UV21_i = ", AImag(UV(2,1))
+Write(123,*) "UV22_r = ", Real(UV(2,2),dp)
+Write(123,*) "UV22_i = ", AImag(UV(2,2))
+Write(123,*) "UV23_r = ", Real(UV(2,3),dp)
+Write(123,*) "UV23_i = ", AImag(UV(2,3))
+Else 
+Write(123,*) "UV21_i = ", Real(UV(2,1),dp)
+Write(123,*) "UV21_r = ", -AImag(UV(2,1))
+Write(123,*) "UV22_i = ", Real(UV(2,2),dp)
+Write(123,*) "UV22_r = ", -AImag(UV(2,2))
+Write(123,*) "UV23_i = ", Real(UV(2,3),dp)
+Write(123,*) "UV23_r = ", -AImag(UV(2,3))
+End if 
+If (MFv(3).Gt.0._dp) Then 
+Write(123,*) "UV31_r = ", Real(UV(3,1),dp)
+Write(123,*) "UV31_i = ", AImag(UV(3,1))
+Write(123,*) "UV32_r = ", Real(UV(3,2),dp)
+Write(123,*) "UV32_i = ", AImag(UV(3,2))
+Write(123,*) "UV33_r = ", Real(UV(3,3),dp)
+Write(123,*) "UV33_i = ", AImag(UV(3,3))
+Else 
+Write(123,*) "UV31_i = ", Real(UV(3,1),dp)
+Write(123,*) "UV31_r = ", -AImag(UV(3,1))
+Write(123,*) "UV32_i = ", Real(UV(3,2),dp)
+Write(123,*) "UV32_r = ", -AImag(UV(3,2))
+Write(123,*) "UV33_i = ", Real(UV(3,3),dp)
+Write(123,*) "UV33_r = ", -AImag(UV(3,3))
+End if 
 Write(123,*) "ZDL11_r = ", Real(ZDL(1,1),dp)
 Write(123,*) "ZDL11_i = ", AImag(ZDL(1,1))
 Write(123,*) "ZDL12_r = ", Real(ZDL(1,2),dp)
@@ -4636,6 +4658,10 @@ Else If (i_par.Eq.2) Then
 If (i_c.Eq.0) LSHIN= Cmplx(wert,Aimag(LSHIN),dp) 
 If (i_c.Eq.1) LSHIN= Cmplx(Real(LSHIN,dp),wert,dp) 
 InputValueforLSH= .True. 
+Else If (i_par.Eq.1) Then 
+If (i_c.Eq.0) MFSIN= Cmplx(wert,Aimag(MFSIN),dp) 
+If (i_c.Eq.1) MFSIN= Cmplx(Real(MFSIN,dp),wert,dp) 
+InputValueforMFS= .True. 
 Else
 Write(ErrCan,*) "Error in routine "//NameOfUnit(Iname)
 If (i_c.Eq.0) Write(ErrCan,*) "Unknown entry for Block HDMIN ",i_par
@@ -4668,9 +4694,9 @@ If (i_c.Eq.0) LamIN= Cmplx(wert,Aimag(LamIN),dp)
 If (i_c.Eq.1) LamIN= Cmplx(Real(LamIN,dp),wert,dp) 
 InputValueforLam= .True. 
 Else If (i_par.Eq.1) Then 
-If (i_c.Eq.0) mu2IN= Cmplx(wert,Aimag(mu2IN),dp) 
-If (i_c.Eq.1) mu2IN= Cmplx(Real(mu2IN,dp),wert,dp) 
-InputValueformu2= .True. 
+If (i_c.Eq.0) MuIN= Cmplx(wert,Aimag(MuIN),dp) 
+If (i_c.Eq.1) MuIN= Cmplx(Real(MuIN,dp),wert,dp) 
+InputValueforMu= .True. 
 Else
 Write(ErrCan,*) "Error in routine "//NameOfUnit(Iname)
 If (i_c.Eq.0) Write(ErrCan,*) "Unknown entry for Block SMIN ",i_par
@@ -4683,36 +4709,6 @@ End If
 End Do! i_par
 200 Return
 End Subroutine Read_SMIN 
- 
- 
-Subroutine Read_FDMIN(io,i_c,i_model,set_mod_par,kont) 
-Implicit None 
-Integer,Intent(in)::io,i_c,i_model 
-Integer,Intent(inout)::kont,set_mod_par(:) 
-Integer::i_par 
-Real(dp)::wert 
-Character(len=80)::read_line 
-Do 
-Read(io,*,End=200) read_line 
-If (read_line(1:1).Eq."#") Cycle! this loop 
-Backspace(io)! resetting to the beginning of the line 
-If ((read_line(1:1).Eq."B").Or.(read_line(1:1).Eq."b")) Exit! this loop 
-Read(io,*) i_par,wert!,read_line 
-If (i_par.Eq.1) Then 
-MDFIN= wert 
-InputValueforMDF= .True. 
-Else
-Write(ErrCan,*) "Error in routine "//NameOfUnit(Iname)
-If (i_c.Eq.0) Write(ErrCan,*) "Unknown entry for Block FDMIN ",i_par
-If (i_c.Eq.1) Write(ErrCan,*) "Unknown entry for Block IMFDMIN ",i_par
-If (i_c.Eq.0) Write(*,*) "Unknown entry for Block FDMIN ",i_par
-If (i_c.Eq.1) Write(*,*) "Unknown entry for Block IMFDMIN ",i_par
-Call AddError(304)
-If (ErrorLevel.Eq.2) Call TerminateProgram
-End If
-End Do! i_par
-200 Return
-End Subroutine Read_FDMIN 
  
  
 Subroutine Read_MSOFTIN(io,i_c,i_model,set_mod_par,kont) 
